@@ -41,6 +41,10 @@ INSTALLED_APPS = [
     'Profile',
     'login',
     'Administrador',
+
+    'Alumno',
+    'Profesor',
+    
     'rest_framework',
     'rest_framework.authtoken',
 ]
