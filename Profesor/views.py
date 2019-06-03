@@ -26,14 +26,37 @@ class ProfesorList(APIView):
     
 
 
+# class ProfesorDetail(APIView):
+#     def get_objetc(self, id):
+#         try:
+#             return Profesor.objects.get(pk=id)
+#         except Profesor.DoesNotExist:
+#             return 404
+
+#     def get(self, request, id, format=None):
+#         profe = self.get_objetc(id)
+#         serializer = ProfesorSerializer(profe)
+#         return Response(serializer.data)
+
 class ProfesorDetail(APIView):
-    def get_objetc(self, id):
+    def get_object(self, id):
         try:
             return Profesor.objects.get(pk=id)
         except Profesor.DoesNotExist:
-            return 404
+            return "No"
 
     def get(self, request, id, format=None):
-        profe = self.get_objetc(id)
-        serializer = ProfesorSerializer(profe)
-        return Response(serializer.data)
+        Id = self.get_object(id)
+        if Id != "No":
+            Id = ProfesorSerializer(Id)
+            return Response(Id.data)
+        return Response("No existe")
+
+    def put(self, request, id, format=None):
+        Id = self.get_object(id)
+        serializer = ProfesorSerializer(Id, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            datas = serializer.data
+            return Response(datas)
+        return Response("Error", status=status.HTTP_400_BAD_REQUEST)

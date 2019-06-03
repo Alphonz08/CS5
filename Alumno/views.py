@@ -27,13 +27,24 @@ class AlumnoList(APIView):
 
 
 class AlumnoDetail(APIView):
-    def get_objetc(self, id):
+    def get_object(self, id):
         try:
             return Alumno.objects.get(pk=id)
         except Alumno.DoesNotExist:
-            return 404
+            return "No"
 
     def get(self, request, id, format=None):
-        alumno = self.get_objetc(id)
-        serializer = AlumnoSerializer(alumno)
-        return Response(serializer.data)
+        Id = self.get_object(id)
+        if Id != "No":
+            Id = AlumnoSerializer(Id)
+            return Response(Id.data)
+        return Response("No existe")
+
+    def put(self, request, id, format=None):
+        Id = self.get_object(id)
+        serializer = AlumnoSerializer(Id, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            datas = serializer.data
+            return Response(datas)
+        return Response("Error", status=status.HTTP_400_BAD_REQUEST)
