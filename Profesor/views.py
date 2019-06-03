@@ -59,4 +59,4 @@ class ProfesorDetail(APIView):
             serializer.save()
             datas = serializer.data
             return Response(datas)
-        return Response("Error", status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
